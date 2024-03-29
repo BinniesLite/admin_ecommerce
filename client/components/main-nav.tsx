@@ -39,6 +39,11 @@ export function MainNav({
             active: pathName === `/${params.storeId}/sizes`
         },
         {
+            href: `/${params?.storeId}/orders`, // add a questions mark to safe guard lol
+            label: 'Orders',
+            active: pathName === `/${params.storeId}/orders`
+        },
+        {
             href: `/${params?.storeId}/settings`, // add a questions mark to safe guard lol
             label: 'Settings',
             active: pathName === `/${params.storeId}/settings`

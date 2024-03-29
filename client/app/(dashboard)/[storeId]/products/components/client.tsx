@@ -40,7 +40,7 @@ export const ProductClient: React.FC<BillboardClientProps> = ({ data }) => {
             <Separator />
             <DataTable data={data} columns={columns} searchKey="label" />
             <Separator />
-            <ApiList entityName="billboards" entityId="{billboardId}"/>        
+            <ApiList entityName="products" entityId="{productId}"/>        
             
         </>
     )
