@@ -35,6 +35,7 @@ import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@
 
 import { Checkbox } from "@/components/ui/checkbox";
 
+import { TextEditor } from "@/components/text-editor/text-editor";
 
 interface ProductFormProps {
     initialData: Product & {
@@ -67,17 +68,17 @@ export const ProductForm: React.FC<ProductFormProps> = ({ initialData, categorie
     // Use form validation
     const form = useForm<ProductFormValues>({
         resolver: zodResolver(formSchema),
-        defaultValues: initialData ? 
-            { ...initialData, price: parseFloat(String(initialData?.price)) } 
-                : {
-            name: "",
-            images: [],
-            price: 0,
-            categoryId: "",
-            sizeId: "",
-            isFeatured: false,
-            isArchived: false
-        }
+        defaultValues: initialData ?
+            { ...initialData, price: parseFloat(String(initialData?.price)) }
+            : {
+                name: "",
+                images: [],
+                price: 0,
+                categoryId: "",
+                sizeId: "",
+                isFeatured: false,
+                isArchived: false
+            }
     });
 
     const title = initialData ? "Edit Product" : "Create Product";
@@ -331,9 +332,15 @@ export const ProductForm: React.FC<ProductFormProps> = ({ initialData, categorie
                                 </FormItem>
                             )}
                         />
-
+                    
+                    <FormItem>
+                        <FormLabel>Product's Descriptions</FormLabel>
+                        <TextEditor />
+                        <FormMessage />
+                    </FormItem>
                     </div>
 
+                   
                     <Button disabled={loading} className="ml-auto" type="submit">
                         {action}
                     </Button>
