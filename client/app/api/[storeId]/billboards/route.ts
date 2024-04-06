@@ -63,9 +63,6 @@ export async function GET(
     { params }: { params: { storeId: string } }
 ) {
     try {
-      
-
-
         const billboard = await prismaDB.billboard.findMany({
             where: { 
                 storeId: params.storeId

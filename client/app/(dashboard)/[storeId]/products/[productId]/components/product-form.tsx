@@ -128,6 +128,8 @@ export const ProductForm: React.FC<ProductFormProps> = ({ initialData, categorie
         }
     }
 
+    console.log(form)
+
     return (
         <>
             {/* TODO: Add alert modal */}
