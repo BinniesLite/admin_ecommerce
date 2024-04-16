@@ -1,4 +1,3 @@
-
 import {
     Card,
     CardContent,
@@ -12,18 +11,24 @@ import { Separator } from "./ui/separator"
 
 import { Social } from "./social"
 
+import Link from "next/link"
+
 interface CardWrapperProps {
     headerLabel: string,
     headerDescription: string,
     showSocial?: boolean,
-    children: React.ReactNode
+    children: React.ReactNode,
+    hrefBackLabel?: string,
+    hrefBackLink: string
 }
 
 export const CardWrapper: React.FC<CardWrapperProps> = ({
     headerLabel,
     headerDescription,
     showSocial,
-    children
+    children,
+    hrefBackLabel,
+    hrefBackLink
 }) => {
 
     return (<Card>
@@ -37,10 +42,11 @@ export const CardWrapper: React.FC<CardWrapperProps> = ({
             <Separator className="my-2" />
         </CardContent>
 
-
-
-        {showSocial && <CardFooter>
-            <Social />
-        </CardFooter>}
+        <CardFooter className="flex flex-col space-y-2">
+            {showSocial &&
+                <Social />
+            }
+            <Link className="text-gray-500" href={hrefBackLink}>{hrefBackLabel}</Link>
+        </CardFooter>
     </Card>)
 }
