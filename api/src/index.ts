@@ -1,11 +1,21 @@
 import swaggerUi from 'swagger-ui-express';
 import swaggerSpec from "../swagger-setup";
 
+import session from "express-session"
+
 import express, { Request, Response } from 'express';
 import dotenv from 'dotenv';
 
-import UserRoute from './controllers/user';
+import passport from 'passport';
+
 import routers from './routes';
+
+import { initPassport } from "./passport-config";
+
+
+import { users } from './controllers/authentication';
+
+
 
 dotenv.config();
 
@@ -13,13 +23,26 @@ const app = express();
 const port = process.env.PORT || 4000; // Provide a default port if not specified in .env
 
 app.get("/", (req: Request, res: Response) => {
-    res.send("Hello world");
+    res.json({"messages": "Hello world"});
 });
+
+
+
+app.use(express.json());
+app.use(express.urlencoded());
+
+app.use(session({
+    secret: "This is a secret",
+    resave: false,
+    saveUninitialized: false
+}));
+initPassport(app);
+
 
 app.use("/api", routers)
 
-
 app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+
 
 
 app.listen(port, () => {
