@@ -7,15 +7,23 @@ import github from "@/assets/github.png";
 
 import { Button } from "./ui/button";
 
+import { signIn } from "@/auth.config"
 
 
 
 export const Social = () => {
+
+    const onSignInGoogle = async () => {
+        await signIn("google")
+    }   
+    
+
     return <div className="flex items-center w-full gap-x-2">
         <Button
             size="icon"
             className="w-[8rem]"
             variant="outline"
+            onClick={onSignInGoogle}
         >
             <Image
                 src={google}

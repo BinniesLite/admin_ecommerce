@@ -3,47 +3,60 @@ import prisma from "../utils/prisma"
 import bcrypt from "bcrypt"
 import { v4 } from "uuid";
 
+import { User } from "@prisma/client";
+
 import passport from "passport"
-interface User {
-    id?: string,
-    email: string,
-    password: string
-    createdAt?: string,
-    updatedAt?: string
-}
 
-export let users: User[] = [{
-    "email": "khongbiet1145@gmail.com",
-    "password": "123456"
-}]
 
-export const registration = async (req: Request, res: Response) => {
+
+export const register = async (req: Request, res: Response) => {
     try {
-        const { email, password } = req.body;
+        const { email, password } = req.body as User;
 
-        const hashedPassword = await bcrypt.hash(password, 10)
+        const hashedPassword = await bcrypt.hash(password, 10);
 
-        users.push({
-            id: v4(),
-            email: email,
-            password: hashedPassword,
-            createdAt: new Date().toDateString(),
-            updatedAt: new Date().toDateString()
-        })  
-
-        console.log(users)
-
-        res.json("[LOGIN SUCCESSFULLY]")
+        const existingUser: User = await prisma.user.findUnique({
+            where: {
+                email: email
+            }
+        });
+        
+        if (existingUser) {
+            res.json({ "error" : "User already exist"})
+        }
+        
+        await prisma.user.create({
+            data: {
+                email: email,
+                password: hashedPassword
+            }
+        })
+   
+        res.json({ "success": "User created"}).status(200)
     }
     catch (e) {
         res.json({ "error": e }).status(500);
     }
 }
 
-export const login = (req: Request, res: Response) => {
+export const login = async (req: Request, res: Response) => {
     try {
-        console.log(req);
-        console.log(users);
+        const { email, password } = req.body as User;
+        
+        const existingUser: User = await prisma.user.findUnique({
+            where: {
+                email: email
+            }
+        });
+
+        if (!existingUser) {
+            res.json({ "error": "User doesn't exist"}).status(403)
+        }
+        
+
+        
+
+
         return res.json("Login Successfully").status(200);
 
     } catch (error) {

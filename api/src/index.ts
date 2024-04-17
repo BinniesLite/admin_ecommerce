@@ -10,10 +10,7 @@ import passport from 'passport';
 
 import routers from './routes';
 
-import { initPassport } from "./passport-config";
 
-
-import { users } from './controllers/authentication';
 
 
 
@@ -31,12 +28,6 @@ app.get("/", (req: Request, res: Response) => {
 app.use(express.json());
 app.use(express.urlencoded());
 
-app.use(session({
-    secret: "This is a secret",
-    resave: false,
-    saveUninitialized: false
-}));
-initPassport(app);
 
 
 app.use("/api", routers)

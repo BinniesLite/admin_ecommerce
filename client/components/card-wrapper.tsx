@@ -46,7 +46,7 @@ export const CardWrapper: React.FC<CardWrapperProps> = ({
             {showSocial &&
                 <Social />
             }
-            <Link className="text-gray-500" href={hrefBackLink}>{hrefBackLabel}</Link>
+            <Link className="text-gray-500 hover:font-bold" href={hrefBackLink}>{hrefBackLabel}</Link>
         </CardFooter>
     </Card>)
 }

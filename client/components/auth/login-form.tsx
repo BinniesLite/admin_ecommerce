@@ -1,5 +1,7 @@
 "use client"
 
+import { useTransition } from "react";
+
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { useForm } from "react-hook-form"
@@ -20,6 +22,7 @@ import {
 import { Input } from "@/components/ui/input";
 
 import { Button } from "@/components/ui/button";
+import axios from "axios";
 
 const formSchema = z.object({
     email: z.string().email({
@@ -34,6 +37,8 @@ const formSchema = z.object({
 type LoginFormValues = z.infer<typeof formSchema> 
 
 export const LoginForm = () => {
+    const [isPending, startTransition] = useTransition();
+
     const form = useForm<LoginFormValues>({
         resolver: zodResolver(formSchema),
         defaultValues: {
@@ -43,7 +48,10 @@ export const LoginForm = () => {
     })
 
     const onSubmit = (data: LoginFormValues) => {
-        console.log(data);
+        startTransition(async () => {
+            await axios.post("localhost:4000/api/auth/login", data)
+            
+        })
     } 
 
     return (
@@ -63,7 +71,7 @@ export const LoginForm = () => {
                             <FormItem>
                                 <FormLabel>Username or Email</FormLabel>
                                 <FormControl>
-                                    <Input placeholder="...email or username" {...field} />
+                                    <Input disabled={isPending} placeholder="...email or username" {...field} />
                                 </FormControl>
                             </FormItem>
                         )}
@@ -76,7 +84,7 @@ export const LoginForm = () => {
                             <FormItem>
                                 <FormLabel>Password</FormLabel>
                                 <FormControl>
-                                    <Input type="password" placeholder="" {...field} />
+                                    <Input disabled={isPending} type="password" placeholder="" {...field} />
                                 </FormControl>
                             </FormItem>
                         )}

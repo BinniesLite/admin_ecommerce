@@ -6,7 +6,7 @@ import { useForm } from "react-hook-form"
 
 import { CardWrapper } from "../card-wrapper"
 
-import { Separator } from "@/components/ui/separator";
+
 
 import { 
     Form, 
@@ -51,11 +51,11 @@ export const RegisterForm = () => {
 
     return (
         <CardWrapper
-            headerLabel="Login"
+            headerLabel="Register"
             headerDescription="Welcome back!"
             showSocial={true}
             hrefBackLink="/auth/register"
-            hrefBackLabel="Don't have an account?"
+            hrefBackLabel="Have an account?"
         >
             <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
