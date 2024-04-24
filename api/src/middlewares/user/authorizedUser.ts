@@ -9,6 +9,7 @@ const authorizedUser = (req: Request, res: Response, next: NextFunction) => {
         // Use the userId from the token to query data
         const userId = decoded.userId;
         // Proceed with your logic, for example, querying user-specific data
+        res
       } catch (error) {
         // Handle error (e.g., token is invalid or expired)
         res.status(401).json({ message: 'Authentication failed' });

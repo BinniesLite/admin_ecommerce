@@ -58,16 +58,12 @@ export const LoginForm = () => {
             setIsLoading(true)
             const user = await axios.post(`${process.env.BASE_URL}/auth/login`, data, { withCredentials: true});
             
-            toast.error(user.data.message)
-
-            console.log(user)
-            console.log("Get into it yuhhhh")
-            // if (user) {
-            //     router.push("/");
-            // }
-            // else {
-        //     toast.error("User Error you no slay")
-            // }
+            if (user) {
+                router.push("/");
+            }
+            else {
+            toast.error("User Error you no slay")
+            }
         } catch (error) {
             toast.error("Something is wrong yuhhh")
             console.log(error)

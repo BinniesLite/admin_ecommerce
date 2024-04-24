@@ -18,7 +18,7 @@ import cookieParser from 'cookie-parser';
 
 import cors from "cors";
 
-import {  corsOptions } from "../config/cors.config";
+import { corsOptions } from "../config/cors.config";
 import jwt from 'jsonwebtoken';
 
 
@@ -29,7 +29,7 @@ const app = express();
 const port = process.env.PORT || 4000; // Provide a default port if not specified in .env
 
 app.get("/", (req: Request, res: Response) => {
-    res.json({"messages": "Hello world"});
+    res.json({ "messages": "Hello world" });
 });
 
 
@@ -52,9 +52,9 @@ app.use("/api", routers)
 
 app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
-app.get("/set-cookie", (req: Request, res: Response) => { 
-    res.cookie("newUser", false, { maxAge: 1000 * 60 * 60 * 24, httpOnly: true});
-    res.cookie("user-token", false, { maxAge: 1000 * 60 * 60 * 24, httpOnly: true});
+app.get("/set-cookie", (req: Request, res: Response) => {
+    res.cookie("newUser", false, { maxAge: 1000 * 60 * 60 * 24, httpOnly: true });
+    res.cookie("user-token", false, { maxAge: 1000 * 60 * 60 * 24, httpOnly: true });
 
     res.send("Get some cookie y'all")
 })
@@ -69,16 +69,16 @@ app.get("/test-jwt", (req: Request, res: Response) => {
     try {
         const token = req.headers.authorization.split(' ')[1]; // Get the token from the header
         const decoded: any = jwt.verify(token, process.env.JWT_SECRET);
-    
+
         // Use the userId from the token to query data
         const userId = decoded.userId;
         // Proceed with your logic, for example, querying user-specific data
         res
-      } catch (error) {
+    } catch (error) {
         // Handle error (e.g., token is invalid or expired)
         res.status(401).json({ message: 'Authentication failed' });
-      }
-    })
+    }
+})
 
 app.listen(port, () => {
     console.log(`Server running on port ${port}`);
