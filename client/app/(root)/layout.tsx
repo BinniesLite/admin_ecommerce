@@ -7,6 +7,7 @@ import { redirect } from 'next/navigation';
 
 import prismaDB from '@/lib/prisma';
 
+import { cookies } from 'next/headers';
 
 import { allowUsersEmail } from '@/constants/allow-user';
 
@@ -14,7 +15,9 @@ import axios from 'axios';
 
 
 export default async function SetupLayout({children}: {children: React.ReactNode}) {
-    
+    const cookieStore = cookies();
+
+    const isAuthorized = cookies();
     return <>
         Hello World
     </>
