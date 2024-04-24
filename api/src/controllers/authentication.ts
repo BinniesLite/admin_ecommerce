@@ -1,13 +1,10 @@
 import { Request, Response } from "express"
 import prisma from "../utils/prisma"
 import bcrypt from "bcrypt"
-import { v4 } from "uuid";
 
 import { User } from "@prisma/client";
 
-import passport from "passport"
-
-
+import { MAX_AGE, createToken } from "../../lib/create-token";
 
 export const register = async (req: Request, res: Response) => {
     try {
@@ -22,17 +19,25 @@ export const register = async (req: Request, res: Response) => {
         });
         
         if (existingUser) {
-            res.json({ "error" : "User already exist"})
+            res.json({"error" : "User already exist"}).status(403)
+            return 
         }
         
-        await prisma.user.create({
+        const user = await prisma.user.create({
             data: {
                 email: email,
                 password: hashedPassword
             }
         })
+
+        const token = createToken({"userId": existingUser.id});
+        res.cookie("Hello", "it's me")
+        // add it to the cookies of the browser
+        // console.log(token)
+        res.cookie("authToken", token, { maxAge: MAX_AGE * 1000, httpOnly: true})
    
-        res.json({ "success": "User created"}).status(200)
+        res.status(200).json(user)
+
     }
     catch (e) {
         res.json({ "error": e }).status(500);
@@ -41,6 +46,9 @@ export const register = async (req: Request, res: Response) => {
 
 export const login = async (req: Request, res: Response) => {
     try {
+
+        // This makes it set the cookies lmao
+        
         const { email, password } = req.body as User;
         
         const existingUser: User = await prisma.user.findUnique({
@@ -48,19 +56,24 @@ export const login = async (req: Request, res: Response) => {
                 email: email
             }
         });
-
-        if (!existingUser) {
-            res.json({ "error": "User doesn't exist"}).status(403)
+        
+        if (!existingUser || !await bcrypt.compare(password, existingUser.password)) {
+            res.status(401).json({ "error": "Invalid email or password" });
+            return;
         }
+
+      
+        // Now create the token
+        const token = createToken({ "userId": existingUser.id});
+      
+        res.cookie("authToken", token, { maxAge: MAX_AGE * 1000, httpOnly: true})
+
+        res.status(200).json(
+            {"id": existingUser.id, email: existingUser.email});
         
-
-        
-
-
-        return res.json("Login Successfully").status(200);
-
+        return 
     } catch (error) {
-
+        console.log("[AUTHENTICATION]", error)
     }
 }
 

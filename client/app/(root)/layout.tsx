@@ -14,6 +14,11 @@ import axios from 'axios';
 
 
 export default async function SetupLayout({children}: {children: React.ReactNode}) {
+    
+    return <>
+        Hello World
+    </>
+
     const { userId } = auth();
     const user = await currentUser();
 

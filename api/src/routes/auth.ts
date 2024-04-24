@@ -1,7 +1,5 @@
 import { Router } from "express";
 
-import passport from "passport";
-
 import { 
     register, 
     login 
@@ -10,6 +8,6 @@ import {
 const router = Router();
 
 router.post("/register", register);
-router.post("/login", passport.authenticate("local"), login)
+router.post("/login", login)
 
 export default router;

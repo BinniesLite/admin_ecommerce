@@ -1,6 +1,7 @@
 "use client"
 
-import { useTransition } from "react";
+import { useState, useTransition } from "react";
+import { useRouter } from "next/navigation";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -23,6 +24,7 @@ import { Input } from "@/components/ui/input";
 
 import { Button } from "@/components/ui/button";
 import axios from "axios";
+import toast from "react-hot-toast";
 
 const formSchema = z.object({
     email: z.string().email({
@@ -38,6 +40,7 @@ type LoginFormValues = z.infer<typeof formSchema>
 
 export const LoginForm = () => {
     const [isPending, startTransition] = useTransition();
+    const [isLoading, setIsLoading] = useState(false);
 
     const form = useForm<LoginFormValues>({
         resolver: zodResolver(formSchema),
@@ -47,11 +50,30 @@ export const LoginForm = () => {
         }
     })
 
-    const onSubmit = (data: LoginFormValues) => {
-        startTransition(async () => {
-            await axios.post("localhost:4000/api/auth/login", data)
+    const router = useRouter(); 
+
+    const onSubmit = async (data: LoginFormValues) => {
+        // router.push("/")
+        try {
+            setIsLoading(true)
+            const user = await axios.post(`${process.env.BASE_URL}/auth/login`, data, { withCredentials: true});
             
-        })
+            toast.error(user.data.message)
+
+            console.log(user)
+            console.log("Get into it yuhhhh")
+            // if (user) {
+            //     router.push("/");
+            // }
+            // else {
+        //     toast.error("User Error you no slay")
+            // }
+        } catch (error) {
+            toast.error("Something is wrong yuhhh")
+            console.log(error)
+        } finally {
+            setIsLoading(false)
+        }
     } 
 
     return (
@@ -71,7 +93,7 @@ export const LoginForm = () => {
                             <FormItem>
                                 <FormLabel>Username or Email</FormLabel>
                                 <FormControl>
-                                    <Input disabled={isPending} placeholder="...email or username" {...field} />
+                                    <Input disabled={isLoading} placeholder="...email or username" {...field} />
                                 </FormControl>
                             </FormItem>
                         )}
@@ -84,7 +106,7 @@ export const LoginForm = () => {
                             <FormItem>
                                 <FormLabel>Password</FormLabel>
                                 <FormControl>
-                                    <Input disabled={isPending} type="password" placeholder="" {...field} />
+                                    <Input disabled={isLoading} type="password" placeholder="" {...field} />
                                 </FormControl>
                             </FormItem>
                         )}

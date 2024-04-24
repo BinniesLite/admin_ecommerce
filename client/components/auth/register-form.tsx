@@ -6,8 +6,6 @@ import { useForm } from "react-hook-form"
 
 import { CardWrapper } from "../card-wrapper"
 
-
-
 import { 
     Form, 
     FormControl, 
@@ -20,6 +18,9 @@ import {
 import { Input } from "@/components/ui/input";
 
 import { Button } from "@/components/ui/button";
+import { useState } from "react";
+import axios from "axios";
+import toast from "react-hot-toast";
 
 const formSchema = z.object({
     email: z.string().email({
@@ -37,6 +38,8 @@ const formSchema = z.object({
 type RegisterFormValues = z.infer<typeof formSchema> 
 
 export const RegisterForm = () => {
+    const [isLoading, setIsLoading] = useState(false);
+
     const form = useForm<RegisterFormValues>({
         resolver: zodResolver(formSchema),
         defaultValues: {
@@ -45,8 +48,25 @@ export const RegisterForm = () => {
         }
     })
 
-    const onSubmit = (data: RegisterFormValues) => {
-        console.log(data);
+    const onSubmit = async (data: RegisterFormValues) => {
+        // router.push("/")
+        try {
+            setIsLoading(true)
+            const user = await axios.post(`http://localhost:4000/api/auth/register`, data, { withCredentials: true});
+            console.log(user)
+          
+            // if (user) {
+            //     router.push("/");
+            // }
+            // else {
+        //     toast.error("User Error you no slay")
+            // }
+        } catch (error) {
+            toast.error("Something is wrong yuhhh")
+            console.log(error)
+        } finally {
+            setIsLoading(false)
+        }
     } 
 
     return (
@@ -54,7 +74,7 @@ export const RegisterForm = () => {
             headerLabel="Register"
             headerDescription="Welcome back!"
             showSocial={true}
-            hrefBackLink="/auth/register"
+            hrefBackLink="/auth/login"
             hrefBackLabel="Have an account?"
         >
             <Form {...form}>
@@ -68,6 +88,7 @@ export const RegisterForm = () => {
                                 <FormControl>
                                     <Input placeholder="...email or username" {...field} />
                                 </FormControl>
+                                <FormMessage />
                             </FormItem>
                         )}
                     />
