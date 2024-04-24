@@ -1,10 +1,33 @@
 import { Request, Response } from "express"
-import prisma from "../utils/prisma"
+
 import bcrypt from "bcrypt"
+import jwt from "jsonwebtoken";
+
 
 import { User } from "@prisma/client";
 
 import { MAX_AGE, createToken } from "../../lib/create-token";
+
+import prisma from "../utils/prisma"
+
+
+export const isValidJWT = (req: Request, res: Response) => {
+    try {
+        
+        const token = req.headers.authorization.split(' ')[1]; // Get the token from the header
+        
+        const decoded: any = jwt.verify(token, process.env.AUTH_SECRET);
+
+        // Use the userId from the token to query data
+        const userId = decoded.userId;
+        // Proceed with your logic, for example, querying user-specific data
+        console.log(userId)
+        res.status(200).json({"success": "you slay btw"})
+    } catch (error) {
+        // Handle error (e.g., token is invalid or expired)
+        res.status(401).json({ message: 'Authentication failed' });
+    }
+}
 
 export const register = async (req: Request, res: Response) => {
     try {

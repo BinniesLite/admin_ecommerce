@@ -67,13 +67,16 @@ app.get("/read-cookie", (req: Request, res: Response) => {
 
 app.get("/test-jwt", (req: Request, res: Response) => {
     try {
+        
         const token = req.headers.authorization.split(' ')[1]; // Get the token from the header
-        const decoded: any = jwt.verify(token, process.env.JWT_SECRET);
+        
+        const decoded: any = jwt.verify(token, process.env.AUTH_SECRET);
 
         // Use the userId from the token to query data
         const userId = decoded.userId;
         // Proceed with your logic, for example, querying user-specific data
-        res
+        console.log(userId)
+        res.status(200).json({"success": "you slay btw"})
     } catch (error) {
         // Handle error (e.g., token is invalid or expired)
         res.status(401).json({ message: 'Authentication failed' });
