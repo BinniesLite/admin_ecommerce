@@ -17,9 +17,17 @@ import axios from 'axios';
 export default async function SetupLayout({children}: {children: React.ReactNode}) {
     const cookieStore = cookies();
 
-    const isAuthorized = cookies();
+    const token = cookieStore.get('jwt');
+
+    const isVerified = await axios.post(`${process.env.NEXT_PUBLIC_BASE_URL}/auth/verify-jwt`, token)
+    
+    if (!isVerified) {
+        redirect("/auth/login")
+    }
+    
     return <>
         Hello World
+    
     </>
 
     const { userId } = auth();

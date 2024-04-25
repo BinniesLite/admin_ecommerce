@@ -9,7 +9,7 @@ import { useForm } from "react-hook-form"
 
 import { CardWrapper } from "../card-wrapper"
 
-import { Separator } from "@/components/ui/separator";
+// import { Separator } from "@/components/ui/separator";
 
 import { 
     Form, 
@@ -56,14 +56,21 @@ export const LoginForm = () => {
         // router.push("/")
         try {
             setIsLoading(true)
-            const user = await axios.post(`${process.env.BASE_URL}/auth/login`, data, { withCredentials: true});
             
+            console.log(`${process.env.NEXT_PUBLIC_BASE_URL || ""}/auth/login`);
+            const user = await axios.post(`${process.env.NEXT_PUBLIC_BASE_URL}/auth/login`, data, { withCredentials: true});
+            console.log(user);
+
             if (user) {
-                router.push("/");
+                router.push("/")
             }
-            else {
-            toast.error("User Error you no slay")
-            }
+
+            // if (user) {
+            //     router.push("/");
+            // }
+            // else {
+            // toast.error("User Error you no slay")
+            // }
         } catch (error) {
             toast.error("Something is wrong yuhhh")
             console.log(error)

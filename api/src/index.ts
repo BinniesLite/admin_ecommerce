@@ -28,9 +28,7 @@ dotenv.config();
 const app = express();
 const port = process.env.PORT || 4000; // Provide a default port if not specified in .env
 
-app.get("/", (req: Request, res: Response) => {
-    res.json({ "messages": "Hello world" });
-});
+
 
 
 // Trust Proxy for Proxies (Heroku, Render.com, etc)
@@ -47,8 +45,11 @@ app.use(cookieParser());
 
 app.use(cors(corsOptions))
 
+app.get("/", (req: Request, res: Response) => {
+    res.json({ "messages": "Hello world" });
+});
 
-app.use("/api", routers)
+app.use("/api/v1", routers)
 
 app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 

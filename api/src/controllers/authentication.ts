@@ -9,9 +9,10 @@ import { User } from "@prisma/client";
 import { MAX_AGE, createToken } from "../../lib/create-token";
 
 import prisma from "../utils/prisma"
+import prismaDB from "../../lib/prisma";
 
 
-export const isValidJWT = (req: Request, res: Response) => {
+export const isValidJWT = async (req: Request, res: Response) => {
     try {
         
         const token = req.headers.authorization.split(' ')[1]; // Get the token from the header
@@ -21,7 +22,17 @@ export const isValidJWT = (req: Request, res: Response) => {
         // Use the userId from the token to query data
         const userId = decoded.userId;
         // Proceed with your logic, for example, querying user-specific data
-        console.log(userId)
+        
+        const isUserExist = await prismaDB.user.findFirst({
+            where: {
+                id: userId
+            }
+        })
+
+        if (!isUserExist) {
+            res.status(401).json({ message: 'Authentication failed' });
+        }
+
         res.status(200).json({"success": "you slay btw"})
     } catch (error) {
         // Handle error (e.g., token is invalid or expired)
@@ -79,17 +90,19 @@ export const login = async (req: Request, res: Response) => {
                 email: email
             }
         });
+
+        console.log(existingUser);
         
         if (!existingUser || !await bcrypt.compare(password, existingUser.password)) {
-            res.status(401).json({ "error": "Invalid email or password" });
+            res.status(401).json({"error": "Invalid email or password" });
             return;
         }
 
-      
+        
         // Now create the token
         const token = createToken({ "userId": existingUser.id});
       
-        res.cookie("authToken", token, { maxAge: MAX_AGE * 1000, httpOnly: true})
+        res.cookie("jwt", token, { maxAge: MAX_AGE * 1000, httpOnly: true})
 
         res.status(200).json(
             {"id": existingUser.id, email: existingUser.email});
