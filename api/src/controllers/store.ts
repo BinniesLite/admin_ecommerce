@@ -1,9 +1,6 @@
-import { Router } from 'express'
 import { Request, Response } from 'express';
-import clerkClient from '@clerk/clerk-sdk-node';
 import prismaDB from "../../lib/prisma";
 
-const router = Router()
 
 const getStoreByUserId = async (req: Request, res: Response) => {
     try {
@@ -15,13 +12,32 @@ const getStoreByUserId = async (req: Request, res: Response) => {
             }
         })
 
-
-        res.send(stores).status(200)
+        res.status(200).json(stores)
     } catch (error) {
-
+        console.log("[ERROR]")
+        res.status(500).json()
     }
-
 }
+
+
+const createStore = async (req: Request, res: Response) => {
+    const { name, userId } = req.body;
+
+    try {
+        const store = await prismaDB.store.create({
+            data: {
+                name: name,
+                userId: userId
+            }
+        })
+
+        res.status(200).json(store)
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({})
+    }
+}
+
 
 const getAllStore = async (req: Request, res: Response) => {
     try {
@@ -35,5 +51,6 @@ const getAllStore = async (req: Request, res: Response) => {
 
 export {
     getStoreByUserId,
-    getAllStore
+    getAllStore,
+    createStore
 };

@@ -11,17 +11,24 @@ import { MAX_AGE, createToken } from "../../lib/create-token";
 import prisma from "../utils/prisma"
 import prismaDB from "../../lib/prisma";
 
+export const signOut = (req: Request, res: Response) => {
+    try {
+        res.clearCookie("jwt")
+    }
+    catch (e) {
 
-export const isValidJWT = async (req: Request, res: Response) => {
+    }
+}
+
+export const verifyToken = async (req: Request, res: Response) => {
     try {
         
         const token = req.headers.authorization.split(' ')[1]; // Get the token from the header
         
         const decoded: any = jwt.verify(token, process.env.AUTH_SECRET);
-
-        // Use the userId from the token to query data
+        
+        
         const userId = decoded.userId;
-        // Proceed with your logic, for example, querying user-specific data
         
         const isUserExist = await prismaDB.user.findFirst({
             where: {
@@ -30,12 +37,14 @@ export const isValidJWT = async (req: Request, res: Response) => {
         })
 
         if (!isUserExist) {
-            res.status(401).json({ message: 'Authentication failed' });
+            console.log("[AUTHENTICATION_VERIFY-TOKEN]")
+            res.status(401).json({ message: 'Authentication failed slay' });
         }
 
         res.status(200).json({"success": "you slay btw"})
     } catch (error) {
         // Handle error (e.g., token is invalid or expired)
+        console.log("[AUTHENTICATION_VERIFY-TOKEN]")
         res.status(401).json({ message: 'Authentication failed' });
     }
 }
@@ -65,15 +74,15 @@ export const register = async (req: Request, res: Response) => {
         })
 
         const token = createToken({"userId": existingUser.id});
-        res.cookie("Hello", "it's me")
-        // add it to the cookies of the browser
-        // console.log(token)
-        res.cookie("authToken", token, { maxAge: MAX_AGE * 1000, httpOnly: true})
-   
+        
+        res.cookie("jwt", token, { maxAge: MAX_AGE * 1000, httpOnly: true})
+        
+    
         res.status(200).json(user)
 
     }
     catch (e) {
+        console.log("[AUTHENTICATION_REGISTER]")
         res.json({ "error": e }).status(500);
     }
 }
@@ -91,7 +100,6 @@ export const login = async (req: Request, res: Response) => {
             }
         });
 
-        console.log(existingUser);
         
         if (!existingUser || !await bcrypt.compare(password, existingUser.password)) {
             res.status(401).json({"error": "Invalid email or password" });
@@ -109,6 +117,7 @@ export const login = async (req: Request, res: Response) => {
         
         return 
     } catch (error) {
+        console.log("[AUTHENTICATION_LOGIN]")
         console.log("[AUTHENTICATION]", error)
     }
 }

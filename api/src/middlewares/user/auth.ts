@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express"
-import prismaDB from "../../lib/prisma";
+import prismaDB from "../../../lib/prisma";
 
 
 export const authenticationMiddleware = async (req: Request, res: Response, next: NextFunction) => {

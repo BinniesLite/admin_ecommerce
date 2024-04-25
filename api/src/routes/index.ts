@@ -4,8 +4,11 @@ import storeRouter from "./store";
 import productRouter from "./products"
 import authRouter from "./auth"
 
+import { authorizedUser } from '../middlewares/user/authorizedUser';
+
 const router = Router();
 
+storeRouter.use(authorizedUser)
 
 const appRoutes = [
     {

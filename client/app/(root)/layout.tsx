@@ -15,29 +15,12 @@ import axios from 'axios';
 
 
 export default async function SetupLayout({children}: {children: React.ReactNode}) {
-    const cookieStore = cookies();
-
-    const token = cookieStore.get('jwt');
-
-    const isVerified = await axios.post(`${process.env.NEXT_PUBLIC_BASE_URL}/auth/verify-jwt`, token)
     
-    if (!isVerified) {
-        redirect("/auth/login")
-    }
+    // return <>
+    //     Hello World
     
-    return <>
-        Hello World
-    
-    </>
+    // </>
 
-    const { userId } = auth();
-    const user = await currentUser();
-
- 
-
-    if (!userId) { 
-        redirect("/sign-in");
-    }
 
 
     
@@ -56,15 +39,15 @@ export default async function SetupLayout({children}: {children: React.ReactNode
     
 
 
-    const store = await prismaDB.store.findFirst({
-        where: {
-            userId: userId
-        }
-    });
+    // const store = await prismaDB.store.findFirst({
+    //     where: {
+    //         userId: userId
+    //     }
+    // });
 
-    if (store) {
-        redirect(`/${store.id}`);
-    }
+    // if (store) {
+    //     redirect(`/${store.id}`);
+    // }
 
     // Let the thought flow to where it comes from nowhere
     return <>

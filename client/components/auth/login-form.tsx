@@ -57,13 +57,8 @@ export const LoginForm = () => {
         try {
             setIsLoading(true)
             
-            console.log(`${process.env.NEXT_PUBLIC_BASE_URL || ""}/auth/login`);
             const user = await axios.post(`${process.env.NEXT_PUBLIC_BASE_URL}/auth/login`, data, { withCredentials: true});
-            console.log(user);
-
-            if (user) {
-                router.push("/")
-            }
+            
 
             // if (user) {
             //     router.push("/");

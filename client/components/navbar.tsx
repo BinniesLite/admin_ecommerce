@@ -1,22 +1,28 @@
-import { UserButton, auth } from "@clerk/nextjs";
-import { redirect } from "next/navigation";
 
 import { MainNav } from "@/components/main-nav";
 import StoreSwitcher from "@/components/store-switcher";
-import prismaDB from "@/lib/prisma";
 
-const Navbar = async () => {
-    const { userId } = auth(); 
+import axios from "axios";
+import { Store } from "@prisma/client";
+import { httpClient } from "@/lib/axios";
 
-    if (!userId) {
-        redirect("/sign-in");
-    }
+export const Navbar = async () => {
+    // const { userId } = auth(); 
+
+    console.log(`${process.env.NEXT_PUBLIC_BASE_URL}/store`)
     
-    const stores = await prismaDB.store.findMany({
-        where: {
-            userId
-        }
-    })
+
+    const response = await httpClient.get(`/store`)
+    const stores: Store[] = response.data;
+    // if (!userId) {
+    //     redirect("/sign-in");
+    // }
+    
+    // const stores = await prismaDB.store.findMany({
+    //     where: {
+    //         userId
+    //     }
+    // })
 
 
     return <div className="border-b">
@@ -24,10 +30,9 @@ const Navbar = async () => {
             <StoreSwitcher items={stores} />
             <MainNav />
             <div className="ml-auto flex items-center space-x-4">
-                <UserButton afterSignOutUrl="/" />
+                {/* <UserButton afterSignOutUrl="/" /> */}
             </div>
         </div>
     </div>;
 }
  
-export default Navbar;

@@ -17,12 +17,15 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
+import { useRouter } from "next/navigation";
+
 const formSchema = z.object({
     name: z.string().min(1, {message: "Name can't be empty"})
 });
 
 export const StoreModal = () => {
     const storeModal = useStoreModal();
+    const router = useRouter();
     
     const [loading, setLoading] = useState<boolean>();
 
@@ -39,7 +42,7 @@ export const StoreModal = () => {
         
         try {
             setLoading(true);
-            const response = await axios.post("/api/store", values);
+            const response = await axios.post(`${process.env.NEXT_PUBLIC_BASE_URL}/store/create-store`, values);
             console.log("[Store-modal]",response.data)
             toast.success("Store created ✨");
             window.location.assign(`/${response.data.id}`);
