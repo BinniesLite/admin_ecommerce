@@ -26,7 +26,7 @@ const formSchema = z.object({
 export const StoreModal = () => {
     const storeModal = useStoreModal();
     const router = useRouter();
-    
+
     const [loading, setLoading] = useState<boolean>();
 
     // Form handling
@@ -45,8 +45,7 @@ export const StoreModal = () => {
             const response = await axios.post(`${process.env.NEXT_PUBLIC_BASE_URL}/store/create-store`, values);
             console.log("[Store-modal]",response.data)
             toast.success("Store created ✨");
-            window.location.assign(`/${response.data.id}`);
-
+            router.push()
 
             setLoading(false);
         } catch (e) {

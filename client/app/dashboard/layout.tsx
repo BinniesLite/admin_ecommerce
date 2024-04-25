@@ -1,7 +1,7 @@
 import { redirect } from 'next/navigation';
 import prismaDB from '@/lib/prisma';
 
-import { Navbar } from '@/components/navbar';
+
 
 export default async function DashboardLayout({
     children,
@@ -15,7 +15,7 @@ export default async function DashboardLayout({
     // if (!userId) {
     //     redirect("/sign-in");
     // };
-
+    
     // const store = await prismaDB.store.findFirst({
     //     where: {
     //         id: params.storeId,
@@ -29,7 +29,7 @@ export default async function DashboardLayout({
     // }
 
     return <>
-        <Navbar/>
+        {/* <Navbar/> */}
         {children}
         </>
 }
